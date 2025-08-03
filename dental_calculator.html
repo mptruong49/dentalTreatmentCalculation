@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Treatment Cost Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .treatments-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .treatment-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .treatment-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .treatment-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+        
+        .treatment-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .treatment-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        }
+        
+        .treatment-item.selected::before {
+            transform: scaleY(1);
+        }
+        
+        .treatment-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+        
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .checkbox.checked {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #667eea;
+        }
+        
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .code {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #495057;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 0.95em;
+            border: 1px solid #dee2e6;
+        }
+        
+        .description {
+            flex: 1;
+            font-size: 1.05em;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: right;
+        }
+        
+        .total-section {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            position: sticky;
+            bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .total-label {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .total-price {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #f39c12;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .selected-count {
+            margin-top: 10px;
+            opacity: 0.8;
+            font-size: 0.95em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .treatments-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .treatment-item {
+                padding: 15px;
+            }
+            
+            .treatment-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .description {
+                font-size: 1em;
+            }
+            
+            .total-price {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦷 Dental Treatment Calculator</h1>
+            <p>Select treatments and see your total cost instantly</p>
+        </div>
+        
+        <div class="content">
+            <div class="treatments-grid" id="treatments"></div>
+            
+            <div class="total-section">
+                <div class="total-label">Total Treatment Cost</div>
+                <div class="total-price" id="totalPrice">$0.00</div>
+                <div class="selected-count" id="selectedCount">0 treatments selected</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dental treatment data with codes, descriptions, and prices
+        const treatments = [
+            { code: "D0120", description: "Periodic oral evaluation - established patient", price: 75 },
+            { code: "D0150", description: "Comprehensive oral evaluation - new or established patient", price: 120 },
+            { code: "D0210", description: "Intraoral - complete series of radiographic images", price: 150 },
+            { code: "D0220", description: "Intraoral - periapical first radiographic image", price: 45 },
+            { code: "D0272", description: "Bitewings - two radiographic images", price: 65 },
+            { code: "D1110", description: "Prophylaxis - adult", price: 95 },
+            { code: "D1120", description: "Prophylaxis - child", price: 75 },
+            { code: "D1206", description: "Topical application of fluoride varnish", price: 35 },
+            { code: "D2140", description: "Amalgam - one surface, primary or permanent", price: 165 },
+            { code: "D2150", description: "Amalgam - two surfaces, primary or permanent", price: 195 },
+            { code: "D2160", description: "Amalgam - three surfaces, primary or permanent", price: 225 },
+            { code: "D2330", description: "Resin-based composite - one surface, anterior", price: 185 },
+            { code: "D2331", description: "Resin-based composite - two surfaces, anterior", price: 215 },
+            { code: "D2332", description: "Resin-based composite - three surfaces, anterior", price: 245 },
+            { code: "D2391", description: "Resin-based composite - one surface, posterior", price: 195 },
+            { code: "D2392", description: "Resin-based composite - two surfaces, posterior", price: 235 },
+            { code: "D2740", description: "Crown - porcelain/ceramic substrate", price: 1250 },
+            { code: "D2750", description: "Crown - porcelain fused to high noble metal", price: 1350 },
+            { code: "D2790", description: "Crown - full cast high noble metal", price: 1450 },
+            { code: "D3220", description: "Therapeutic pulpotomy", price: 295 },
+            { code: "D3310", description: "Endodontic therapy, anterior tooth", price: 785 },
+            { code: "D3320", description: "Endodontic therapy, premolar tooth", price: 885 },
+            { code: "D3330", description: "Endodontic therapy, molar tooth", price: 1125 },
+            { code: "D4210", description: "Gingivectomy or gingivoplasty - four or more contiguous teeth", price: 485 },
+            { code: "D4341", description: "Periodontal scaling and root planing - four or more teeth per quadrant", price: 285 },
+            { code: "D5110", description: "Complete denture - upper", price: 1685 },
+            { code: "D5120", description: "Complete denture - lower", price: 1685 },
+            { code: "D5213", description: "Upper partial denture - cast metal framework with resin denture teeth", price: 1425 },
+            { code: "D5214", description: "Lower partial denture - cast metal framework with resin denture teeth", price: 1425 },
+            { code: "D6010", description: "Surgical placement of implant body - endosteal implant", price: 2250 },
+            { code: "D6040", description: "Surgical placement of eposteal implant", price: 3850 },
+            { code: "D6055", description: "Connecting bar - implant supported or abutment supported", price: 1650 },
+            { code: "D6240", description: "Pontic - porcelain fused to high noble metal", price: 1285 },
+            { code: "D7140", description: "Extraction, erupted tooth or exposed root", price: 185 },
+            { code: "D7210", description: "Extraction, erupted tooth requiring removal of bone and/or sectioning", price: 385 },
+            { code: "D7220", description: "Removal of impacted tooth - soft tissue", price: 425 },
+            { code: "D7230", description: "Removal of impacted tooth - partially bony", price: 525 },
+            { code: "D7240", description: "Removal of impacted tooth - completely bony", price: 685 },
+            { code: "D9110", description: "Palliative (emergency) treatment of dental pain", price: 125 },
+            { code: "D9230", description: "Anesthesia - inhalation of nitrous oxide", price: 85 },
+            { code: "D9310", description: "Consultation - diagnostic service", price: 165 }
+        ];
+
+        let selectedTreatments = new Set();
+
+        function createTreatmentItem(treatment) {
+            const item = document.createElement('div');
+            item.className = 'treatment-item';
+            item.onclick = () => toggleTreatment(treatment.code, item);
+            
+            item.innerHTML = `
+                <div class="treatment-header">
+                    <div class="checkbox" id="checkbox-${treatment.code}"></div>
+                    <div class="code">${treatment.code}</div>
+                    <div class="description">${treatment.description}</div>
+                    <div class="price">$${treatment.price.toFixed(2)}</div>
+                </div>
+            `;
+            
+            return item;
+        }
+
+        function toggleTreatment(code, element) {
+            const checkbox = document.getElementById(`checkbox-${code}`);
+            
+            if (selectedTreatments.has(code)) {
+                selectedTreatments.delete(code);
+                element.classList.remove('selected');
+                checkbox.classList.remove('checked');
+            } else {
+                selectedTreatments.add(code);
+                element.classList.add('selected');
+                checkbox.classList.add('checked');
+            }
+            
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = 0;
+            const selectedCount = selectedTreatments.size;
+            
+            selectedTreatments.forEach(code => {
+                const treatment = treatments.find(t => t.code === code);
+                if (treatment) {
+                    total += treatment.price;
+                }
+            });
+            
+            document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('selectedCount').textContent = 
+                `${selectedCount} treatment${selectedCount !== 1 ? 's' : ''} selected`;
+        }
+
+        function initializeApp() {
+            const treatmentsContainer = document.getElementById('treatments');
+            
+            treatments.forEach(treatment => {
+                const item = createTreatmentItem(treatment);
+                treatmentsContainer.appendChild(item);
+            });
+            
+            updateTotal();
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>

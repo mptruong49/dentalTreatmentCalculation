@@ -194,8 +194,8 @@
             }
             
             .treatments-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
             }
             
             .header {
@@ -207,21 +207,46 @@
             }
             
             .content {
-                padding: 20px;
+                padding: 15px;
             }
             
             .treatment-item {
-                padding: 15px;
+                padding: 12px;
             }
             
             .treatment-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 8px;
+            }
+            
+            .checkbox {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .checkbox.checked::after {
+                font-size: 12px;
+            }
+            
+            .code {
+                font-size: 0.8em;
+                padding: 4px 8px;
             }
             
             .description {
+                font-size: 0.85em;
+                line-height: 1.3;
+            }
+            
+            .price {
                 font-size: 1em;
+                font-weight: bold;
+            }
+            
+            .total-section {
+                padding: 20px;
+                margin-top: 20px;
             }
             
             .total-price {

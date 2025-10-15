@@ -422,12 +422,13 @@
                 }
             };
             
+            const defaultQty = treatment.defaultQuantity || 1;
             const quantitySection = treatment.hasQuantity ? `
                 <div class="quantity-controls" style="display: none;" id="quantity-section-${treatment.code}">
                     <label style="font-size: 0.9em; color: #666;">${treatment.quantityLabel}:</label>
                     <div class="quantity-buttons">
                         <div class="quantity-btn" onclick="changeQuantity('${treatment.code}', -1); event.stopPropagation();">−</div>
-                        <input type="number" id="quantity-${treatment.code}" min="1" max="${treatment.maxQuantity}" value="1" 
+                        <input type="number" id="quantity-${treatment.code}" min="1" max="${treatment.maxQuantity}" value="${defaultQty}" 
                                class="quantity-input"
                                onchange="updateQuantity('${treatment.code}')" onclick="event.stopPropagation()">
                         <div class="quantity-btn" onclick="changeQuantity('${treatment.code}', 1); event.stopPropagation();">+</div>

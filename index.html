@@ -462,16 +462,17 @@
                     quantitySection.style.display = 'none';
                 }
             } else {
-                const quantity = treatment.hasQuantity ? 1 : 1;
+                const defaultQty = treatment.defaultQuantity || 1;
+                const quantity = treatment.hasQuantity ? defaultQty : 1;
                 selectedTreatments.set(code, quantity);
                 element.classList.add('selected');
                 checkbox.classList.add('checked');
                 if (quantitySection) {
                     quantitySection.style.display = 'flex';
                     quantitySection.style.alignItems = 'center';
-                    document.getElementById(`quantity-${code}`).value = 1;
+                    document.getElementById(`quantity-${code}`).value = defaultQty;
                 }
-                updatePriceDisplay(code, treatment.price, 1);
+                updatePriceDisplay(code, treatment.price, quantity);
             }
             
             updateTotal();
